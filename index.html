@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Group Sorter</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        #groups { margin-top: 20px; }
+        .group { border: 1px solid #ddd; padding: 10px; margin: 10px; border-radius: 5px; background-color: #f9f9f9; }
+    </style>
+</head>
+<body>
+    <h2>Group Sorter</h2>
+    <label for="groupSize">Enter Group Size:</label>
+    <input type="number" id="groupSize" min="1">
+    <button onclick="sortGroups()">Sort Groups</button>
+    <div id="groups"></div>
+
+    <script>
+        const people = [
+            "Abdulqadir Muhaimin", "Bileac Patrisio", "Bujoreanu Gabriel", "Camara Damantan",
+            "Dias Da Silva Nazare Leandro", "Donoiu Darius", "Fonseka Anuk", "Guadalupe Dos Ramos Lopes Dany",
+            "Hanaf Salim", "Jeyaseelan Aaron", "Mohamedadnan Mohammed", "Odoemena Clinton",
+            "Patel Hari", "Patel Moksh", "Rai Bibek", "Rashid Hussain", "Santos William",
+            "Shirzad Umar", "Vergara Von Stephen", "Erik Acsinte", "Yevhen Bodnaruk", "Lerrahb Cosme De La Cruz",
+            "Fadi Hanna", "Eesa Haroon", "Amari Jackson-Shepherd", "Shane Katambay", "Vlad Kavalchuk",
+            "Bartek Lyko", "Patrick Masterson", "Paul Nichols", "Oleksii Noryk", "Enoch Nyembwe",
+            "Ashwienth Pakeendran", "Rathushan Premkumar", "Haseeb Ranjbar", "Samuel Reginolt",
+            "Umar Rizmath", "Esa Sayed", "Vihaan Shah", "Rathujaan Singarajah", "Dexter Tsangaris",
+            "Vladyslav Vozniak", "Kyle Wong", "Janek Zieba", "Ahmed Al-Nassrawi", "Basher Al Jamali",
+            "Roxshan Antony-Prashanthan", "Tomi Bobnaj", "James Caseley", "Mario Cicu", "Arnav Dalal",
+            "Yin Ho Anson Fu", "Liam Hatfield", "Aryan Hirani", "Henry Horaczko", "Badr Irfan",
+            "Ajan Kandeepan", "Ashwin Kesawan", "Ariyan Khan", "John Lukose", "Roshan Mistry",
+            "Aaryan Rabadia", "Nikhil Ramachandran", "Chilacshan Ravinathan", "Shreyas Rawoo",
+            "Asaph Santos Goulart", "Vishaal Souprayal", "Luke Sylvester", "Astin Tang", "Evan Tissera",
+            "Alex Wisniewicz", "Mohammed Zahir", "Gert Zeqiri", "Yusuf Adams", "Jinegwo Attuh",
+            "Rand Aziz", "Farrman Azizi", "Mykola Burla", "Nasrat Ghulamnabi", "Masih Haider",
+            "Bilal Hajizada", "Vinuth Henakaralalage", "Benyamin Khorrambakht", "Wang Yu Leung",
+            "Arthikan Murasolimaran", "Brian Payne", "Krish Pindoriya", "Darius Puiu", "Ajai Reginoold",
+            "Sharaf Shifar", "Mikeyas Sisay", "Alex Stankiewicz", "John Sweeney Bracewell", "Adorian Toma",
+            "Jefferen Yeboah", "Ridha Al-Najim", "Omid Amini", "Lucian Ardelean", "Rares Bilbiie",
+            "Mukilan Selvakumar Christian", "Alex Corogeanu", "Stephen Ellis", "Kaviyan Jeyanthan",
+            "Piragiv Jeyanthan", "Sukasan Kethiesan", "Sanjaey Krishan", "Evan Maheswaran", "Rohan Mantravadi",
+            "Hassaan Moheb", "Ishaan Naidu", "Tamim Norzai", "Ayomide Oluwole", "Dev Patel",
+            "Kan Lok Pau lan", "Deeshan Rubesh", "Sarvesh Saravanan", "Jash Selarka", "Ethan Shekar",
+            "Tyler Taberer", "Shayan Vekariya", "Kishan Vora", "Cheuk Him Alvin Yu", "Ali Abood",
+            "Hassan Aldfiri", "Emmanuel Anatogu", "Olaf Arazny", "Stanley Babu", "Candeur Bosakwa",
+            "Matthew Businge", "Haroon Dar", "Enzo Gracias", "Adam Halliday", "Yousef Harris",
+            "Arion Kale", "Mohammad Khan", "Eoghan O'Connor", "Ciaran O'Donnell", "Alex Obuchowski",
+            "Spyridon Papageorgiou", "Aarav Patel", "Shayan Patel", "Luca Pop", "Bashirali Rajwani",
+            "Tharun Ramadevi", "Manis Regami", "Shreyas Sathyaram", "Shubh Sharma", "Jaician Sonabey",
+            "Tashwin Visnukanthan", "Rayyan Wazir", "Weqar Yari"
+        ];
+
+        function shuffleArray(arr) {
+            return arr.sort(() => Math.random() - 0.5);
+        }
+
+        function sortGroups() {
+            let groupSize = parseInt(document.getElementById("groupSize").value);
+            if (isNaN(groupSize) || groupSize < 1) {
+                alert("Please enter a valid group size!");
+                return;
+            }
+            let shuffledPeople = shuffleArray([...people]);
+            let groups = {};
+            let numGroups = Math.floor(shuffledPeople.length / groupSize);
+            let remainder = shuffledPeople.length % groupSize;
+            let index = 0;
+
+            for (let i = 1; i <= numGroups; i++) {
+                groups[`Group ${i}`] = shuffledPeople.slice(index, index + groupSize);
+                index += groupSize;
+            }
+
+            if (remainder > 0) {
+                groups[`Group ${numGroups + 1}`] = shuffledPeople.slice(index);
+            }
+
+            displayGroups(groups);
+        }
+
+        function displayGroups(groups) {
+            let groupsDiv = document.getElementById("groups");
+            groupsDiv.innerHTML = "";
+            for (let [group, members] of Object.entries(groups)) {
+                let groupDiv = document.createElement("div");
+                groupDiv.className = "group";
+                groupDiv.innerHTML = `<strong>${group}:</strong> ${members.join(", ")}`;
+                groupsDiv.appendChild(groupDiv);
+            }
+        }
+    </script>
+</body>
+</html>
